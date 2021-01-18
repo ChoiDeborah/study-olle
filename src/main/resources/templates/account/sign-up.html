@@ -45,7 +45,7 @@
     </div>
     <div class="row justify-content-center">
         <form class="needs-validation col-sm-6" action="#"
-              th:action="@{/signup}" th:object="${signUpForm}" method="post" novalidate>
+              th:action="@{/sign-up}" th:object="${signUpForm}" method="post" novalidate>
             <div class="form-group">
                 <label for="nickname">닉네임</label>
                 <input id="nickname" type="text" th:field="*{nickname}" class="form-control"
@@ -59,7 +59,7 @@
 
             <div class="form-group">
                 <label for="email">이메일</label>
-                <input id="email" type="email" th:field="*{email}" class="form-control"
+                <input id="email" type="email" th:field= "*{email}" class="form-control"
                        placeholder="your@email.com" aria-describedby="emailHelp" required>
                 <small id="emailHelp" class="form-text text-muted">
                     스터디올래는 사용자의 이메일을 공개하지 않습니다.

@@ -17,15 +17,15 @@ public class SignUpFormValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(Object object, Errors errors) {
         // TODO email, nickname duplicated
-        SignUpForm signUpForm = (SignUpForm)errors;
+        SignUpForm signUpForm = (SignUpForm)object;
         if (accountRepository.existsByEmail(signUpForm.getEmail())) {
-            errors.rejectValue("email", "invliad.email", new Object[]{signUpForm.getEmail()}, "이미 사용 중인 이메일 입니다.");
+            errors.rejectValue("email", "invaliad.email", new Object[]{signUpForm.getEmail()}, "이미 사용 중인 이메일 입니다.");
         }
 
         if(accountRepository.existsByNickname(signUpForm.getNickname())) {
-            errors.rejectValue("email", "invliad.nickname", new Object[]{signUpForm.getNickname()}, "이미 사용 중인 닉네 입니다.");
+            errors.rejectValue("email", "invliad.nickname", new Object[]{signUpForm.getNickname()}, "이미 사용 중인 닉네임 입니다.");
         }
 
     }

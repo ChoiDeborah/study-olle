@@ -1,5 +1,6 @@
 package com.studyolle.account;
 
+import com.studyolle.domain.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,9 @@ class AccountControllerTest {
                 .andExpect(status().is3xxRedirection()) // CSRF가 활성화 되어 있다
                 .andExpect(view().name("redirect:/"));
 
-        assertTrue(accountRepository.existsByEmail("jiminchoi@gmail.com"));
+        Account account = accountRepository.findByEmail("jiminchoi@gmail.com");
+        assertNotNull(account);
+        assertNotEquals(account.getPassword(), "12345678");
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
     }
 }

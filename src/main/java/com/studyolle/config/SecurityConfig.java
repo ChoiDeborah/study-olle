@@ -25,8 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // static한 리소스들은 security filter 적용하지 않도록
+        // static한 리소스들 및 node_modules 하위의 것은 security filter 적용하지 않도록
         web.ignoring()
+                .mvcMatchers("/node_modules/**")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }

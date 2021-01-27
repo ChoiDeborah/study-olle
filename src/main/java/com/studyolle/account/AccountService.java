@@ -56,7 +56,7 @@ public class AccountService {
     public void login(Account account) {
         // 정석 아님 - 인코딩한 패스워드 밖에 접근 못하기 때문
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                account.getNickname(),
+                new UserAccount(account),
                 account.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
         SecurityContext context = SecurityContextHolder.getContext();

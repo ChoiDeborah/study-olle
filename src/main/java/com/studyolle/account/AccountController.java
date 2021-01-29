@@ -60,8 +60,10 @@ public class AccountController {
             return view;
         }
 
-        account.completeSignUp();
-        accountService.login(account);
+        // 데이터 변경은 서비스 계층으로 위임해서 트랜잭션 안에서 처리
+        // 데이터 조회는 레파지토리 또는 서비스를 사용한다.
+        accountService.compeleteSignUp(account);
+
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
         return view;

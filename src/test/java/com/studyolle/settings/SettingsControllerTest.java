@@ -2,9 +2,7 @@ package com.studyolle.settings;
 
 import com.studyolle.WithAccount;
 import com.studyolle.account.AccountRepository;
-import com.studyolle.account.AccountService;
 import com.studyolle.domain.Account;
-import org.h2.engine.Setting;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

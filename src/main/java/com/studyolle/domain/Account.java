@@ -1,6 +1,8 @@
 package com.studyolle.domain;
 
 import lombok.*;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.persistence.*;
 import java.time.Instant;

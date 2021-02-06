@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -58,7 +59,8 @@ public class Account {
     private LocalDateTime emailCheckTokenGeneratedAt;
 
     @ManyToMany
-    private Set<Tag> tags;
+    // 비어있는 컬렉션 세팅
+    private Set<Tag> tags = new HashSet<>();
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();

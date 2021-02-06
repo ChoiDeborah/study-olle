@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -131,5 +132,10 @@ public class AccountService implements UserDetailsService {
 
         // LazyLoading. 엔티티 매니저를 통해 필요한 순간에만 읽어옴
         //accountRepository.getOne()
+    }
+
+    public Set<Tag> getTags(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getTags();
     }
 }

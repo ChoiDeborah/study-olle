@@ -1,5 +1,7 @@
 package com.studyolle.settings;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studyolle.account.AccountService;
 import com.studyolle.account.CurrentUser;
 import com.studyolle.domain.Account;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,6 +45,8 @@ public class SettingsController {
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
     private final TagRepository tagRepository;
+    // json 변환 용
+    private final ObjectMapper objectMapper;
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -135,11 +140,15 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_TAGS_URL)
-    public String updateTag(@CurrentUser Account account, Model model) {
+    public String updateTag(@CurrentUser Account account, Model model) throws JsonProcessingException {
         model.addAttribute(account);
         Set<Tag> tags = accountService.getTags(account);
         // 태그 목록 view 에 전달
         model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+
+        // 다 가져오고 스트림으로 매핑 후 스프링 변환 리스트로 변환
+        List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(allTags));
 
         return SETTINGS_TAGS_VIEW_NAME;
     }

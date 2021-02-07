@@ -43,7 +43,6 @@ public class StudyController {
 
     @GetMapping("/new-study")
     public String newStudyForm(@CurrentAccount Account account, Model model) {
-
         model.addAttribute(account);
         model.addAttribute(new StudyForm());
         return "study/form";
@@ -58,4 +57,5 @@ public class StudyController {
         Study newStudy = studyService.createNewStudy(modelMapper.map(studyForm, Study.class), account);
         return "redirect:/study/" + URLEncoder.encode(newStudy.getPath(), StandardCharsets.UTF_8);
     }
+
 }

@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class StudyService {
 
-    private StudyRepository studyRepository;
+    private final StudyRepository repository;
 
     public Study createNewStudy(Study study, Account account) {
-        Study newStudy = studyRepository.save(study);
+        Study newStudy = repository.save(study);
         newStudy.addManager(account);
         return newStudy;
     }

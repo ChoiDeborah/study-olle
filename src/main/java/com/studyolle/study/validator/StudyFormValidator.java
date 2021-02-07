@@ -1,6 +1,5 @@
 package com.studyolle.study.validator;
 
-import com.studyolle.domain.Study;
 import com.studyolle.study.StudyRepository;
 import com.studyolle.study.form.StudyForm;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,7 @@ import org.springframework.validation.Validator;
 @RequiredArgsConstructor
 public class StudyFormValidator implements Validator {
 
-    private StudyRepository studyRepository;
+    private final StudyRepository studyRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -21,9 +20,9 @@ public class StudyFormValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        StudyForm studyForm = (StudyForm) target;
+        StudyForm studyForm = (StudyForm)target;
         if (studyRepository.existsByPath(studyForm.getPath())) {
-            errors.rejectValue("path", "wrong.path", "해당 스터디 경로 값을 사용할 수 없습니다.");
+            errors.rejectValue("path", "wrong.path", "해당 스터디 경로값을 사용할 수 없습니다.");
         }
     }
 }

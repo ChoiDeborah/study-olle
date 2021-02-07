@@ -39,7 +39,7 @@ public class StudyController {
         return "study/form";
     }
 
-    @PostMapping("/new-stduy")
+    @PostMapping("/new-study")
     public String newStudySubmit(@CurrentAccount Account account, @Valid StudyForm studyForm, Errors errors) {
         if (errors.hasErrors()) {
             return "study/form";

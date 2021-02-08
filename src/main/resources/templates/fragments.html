@@ -233,7 +233,7 @@
         <a class="nav-item nav-link" th:classappend="${studyMenu == 'events'}? active" href="#" th:href="@{'/study/' + ${study.path} + '/events'}">
             <i class="fa fa-calendar"></i> 모임
         </a>
-        <a
+        <a sec:authorize="isAuthenticated()" th:if="${study.isManager(#authentication.principal)}"
            class="nav-item nav-link" th:classappend="${studyMenu == 'settings'}? active" href="#" th:href="@{'/study/' + ${study.path} + '/settings/description'}">
             <i class="fa fa-cog"></i> 설정
         </a>

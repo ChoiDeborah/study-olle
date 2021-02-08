@@ -43,6 +43,7 @@ public class AccountService implements UserDetailsService {
 
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
+        // 런타임 익셉션 발생 시 트렌젝션은 롤백됨 저장 ㄴㄴ
         sendSignUpConfirmEmail(newAccount);
         return newAccount;
     }
@@ -152,7 +153,7 @@ public class AccountService implements UserDetailsService {
     public void addTag(Account account, Tag tag) {
         // account 무조건 디비에서 읽어옴
         Optional<Account> byId = accountRepository.findById(account.getId());
-        // 있으면 account에 추가해라
+        // 있으면 account 추가해라
         byId.ifPresent(a -> a.getTags().add(tag));
 
         // LazyLoading. 엔티티 매니저를 통해 필요한 순간에만 읽어옴
@@ -182,5 +183,13 @@ public class AccountService implements UserDetailsService {
     public void removeZone(Account account, Zone zone) {
         Optional<Account> byId = accountRepository.findById(account.getId());
         byId.ifPresent(a -> a.getZones().remove(zone));
+    }
+
+    public Account getAccount(String nickname) {
+        Account account = accountRepository.findByNickname(nickname);
+        if (account == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        return account;
     }
 }

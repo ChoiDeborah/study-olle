@@ -18,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -253,7 +254,7 @@ public class StudySettingsController {
 
     @PostMapping("/study/title")
     public String updateStudyTitle(@CurrentAccount Account account, @PathVariable String path, @RequestParam /*생략가능*/ String newTitle,
-                                  Model model, RedirectAttributes attributes) {
+                                   Model model, RedirectAttributes attributes) {
         Study study = studyService.getStudyToUpdateStatus(account, path);
         if (!studyService.isValidTitle(newTitle)) {
             model.addAttribute(account);
@@ -267,4 +268,10 @@ public class StudySettingsController {
         return "redirect:/study/" + getPath(path) + "/settings/study";
     }
 
+    @PostMapping("study//remove")
+    public String removeStudy(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudyToUpdateStatus(account, path);
+        studyService.remove(study);
+        return "redirect:/";
+    }
 }

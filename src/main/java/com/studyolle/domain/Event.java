@@ -3,12 +3,13 @@ package com.studyolle.domain;
 import com.studyolle.account.UserAccount;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NamedEntityGraph(
         name = "Event.withEnrollments",
@@ -18,8 +19,7 @@ import java.util.List;
 @Getter @Setter @EqualsAndHashCode(of = "id")
 public class Event {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne
@@ -46,12 +46,11 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime endDateTime;
 
-    @Column(nullable = true)
+    @Column
     private Integer limitOfEnrollments;
 
-    // 이벤트 하나에 여러개의 참가 신청이 있을 수 있다.
-    @OneToMany(mappedBy = "event") // 양방향 관계로 매핑
-    private List<Enrollment> enrollments;
+    @OneToMany(mappedBy = "event")
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private EventType eventType;
@@ -62,17 +61,6 @@ public class Event {
 
     public boolean isDisenrollableFor(UserAccount userAccount) {
         return isNotClosed() && isAlreadyEnrolled(userAccount);
-    }
-
-    private boolean isAlreadyEnrolled(UserAccount userAccount) {
-        Account account = userAccount.getAccount();
-        for (Enrollment e : this.enrollments) {
-            if (e.getAccount().equals(account)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private boolean isNotClosed() {
@@ -94,7 +82,76 @@ public class Event {
         return this.limitOfEnrollments - (int) this.enrollments.stream().filter(Enrollment::isAccepted).count();
     }
 
+    private boolean isAlreadyEnrolled(UserAccount userAccount) {
+        Account account = userAccount.getAccount();
+        for (Enrollment e : this.enrollments) {
+            if (e.getAccount().equals(account)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public long getNumberOfAcceptedEnrollments() {
         return this.enrollments.stream().filter(Enrollment::isAccepted).count();
+    }
+
+    public void addEnrollment(Enrollment enrollment) {
+        this.enrollments.add(enrollment);
+        enrollment.setEvent(this);
+    }
+
+    public void removeEnrollment(Enrollment enrollment) {
+        this.enrollments.remove(enrollment);
+        enrollment.setEvent(null);
+    }
+
+    public boolean isAbleToAcceptWaitingEnrollment() {
+        return this.eventType == EventType.FCFS && this.limitOfEnrollments > this.getNumberOfAcceptedEnrollments();
+    }
+
+    public boolean canAccept(Enrollment enrollment) {
+        return this.eventType == EventType.CONFIRMATIVE
+                && this.enrollments.contains(enrollment)
+                && !enrollment.isAttended()
+                && !enrollment.isAccepted();
+    }
+
+    public boolean canReject(Enrollment enrollment) {
+        return this.eventType == EventType.CONFIRMATIVE
+                && this.enrollments.contains(enrollment)
+                && !enrollment.isAttended()
+                && enrollment.isAccepted();
+    }
+
+    private List<Enrollment> getWaitingList() {
+        return this.enrollments.stream().filter(enrollment -> !enrollment.isAccepted()).collect(Collectors.toList());
+    }
+
+    public void acceptWaitingList() {
+        if (this.isAbleToAcceptWaitingEnrollment()) {
+            var waitingList = getWaitingList();
+            int numberToAccept = (int) Math.min(this.limitOfEnrollments - this.getNumberOfAcceptedEnrollments(), waitingList.size());
+            waitingList.subList(0, numberToAccept).forEach(e -> e.setAccepted(true));
+        }
+    }
+
+    public void acceptNextWaitingEnrollment() {
+        if (this.isAbleToAcceptWaitingEnrollment()) {
+            Enrollment enrollmentToAccept = this.getTheFirstWaitingEnrollment();
+            if (enrollmentToAccept != null) {
+                enrollmentToAccept.setAccepted(true);
+            }
+        }
+    }
+
+    private Enrollment getTheFirstWaitingEnrollment() {
+        for (Enrollment e : this.enrollments) {
+            if (!e.isAccepted()) {
+                return e;
+            }
+        }
+
+        return null;
     }
 }

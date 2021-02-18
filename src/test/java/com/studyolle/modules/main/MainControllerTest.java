@@ -1,5 +1,6 @@
 package com.studyolle.modules.main;
 
+import com.studyolle.infra.AbstractContainerBaseTest;
 import com.studyolle.infra.MockMvcTest;
 import com.studyolle.modules.account.AccountRepository;
 import com.studyolle.modules.account.AccountService;
@@ -9,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @MockMvcTest
-class MainControllerTest {
+class MainControllerTest extends AbstractContainerBaseTest {
 
     @Autowired
     MockMvc mockMvc;

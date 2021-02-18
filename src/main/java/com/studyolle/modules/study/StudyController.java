@@ -70,7 +70,7 @@ public class StudyController {
     @GetMapping("study/{path}/join")
     public String joinStudy(@CurrentAccount Account account, @PathVariable String path) {
         Study study = studyRepository.findStudyWithMembersByPath(path);
-        studyService.addMembers(study, account);
+        studyService.addMember(study, account);
         return "redirect:/study/" + study.getEncodedPath() + "/members";
     }
 

@@ -13,24 +13,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@NamedEntityGraph(name = "Study.withAll", attributeNodes = {
-        @NamedAttributeNode("tags"),
-        @NamedAttributeNode("zones"),
-        @NamedAttributeNode("managers"),
-        @NamedAttributeNode("members")})
-@NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
-        @NamedAttributeNode("tags"),
-        @NamedAttributeNode("managers")})
-@NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
-        @NamedAttributeNode("zones"),
-        @NamedAttributeNode("managers")})
-@NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
-        @NamedAttributeNode("managers")})
-@NamedEntityGraph(name = "Study.withMembers", attributeNodes = {
-        @NamedAttributeNode("members")})
-@NamedEntityGraph(name = "Study.withTagsAndZones", attributeNodes = {
-        @NamedAttributeNode("tags"),
-        @NamedAttributeNode("zones")})
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
 @Builder @AllArgsConstructor @NoArgsConstructor
@@ -97,6 +79,10 @@ public class Study {
         return this.managers.contains(userAccount.getAccount());
     }
 
+    public void addMemeber(Account account) {
+        this.members.add(account);
+    }
+
     public String getImage() {
         return image != null ? image : "/images/default_banner.png";
     }
@@ -146,18 +132,18 @@ public class Study {
     }
 
     public void addMember(Account account) {
-        this.members.add(account);
+        this.getMembers().add(account);
     }
 
     public void removeMember(Account account) {
-        this.members.remove(account);
+        this.getMembers().remove(account);
     }
 
     public String getEncodedPath() {
         return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
     }
 
-    public boolean isManagerBy(Account account) {
+    public boolean isManagedBy(Account account) {
         return this.getManagers().contains(account);
     }
 }

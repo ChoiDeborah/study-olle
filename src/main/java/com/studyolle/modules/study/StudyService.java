@@ -3,19 +3,15 @@ package com.studyolle.modules.study;
 import com.studyolle.modules.account.Account;
 import com.studyolle.modules.study.event.StudyCreatedEvent;
 import com.studyolle.modules.study.event.StudyUpdateEvent;
-import com.studyolle.modules.tag.Tag;
-import com.studyolle.modules.tag.TagRepository;
-import com.studyolle.modules.zone.Zone;
 import com.studyolle.modules.study.form.StudyDescriptionForm;
+import com.studyolle.modules.tag.Tag;
+import com.studyolle.modules.zone.Zone;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.utility.RandomString;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
 
 import static com.studyolle.modules.study.form.StudyForm.VALID_PATH_PATTERN;
 

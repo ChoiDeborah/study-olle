@@ -56,7 +56,7 @@ public class StudyEventListener {
 
     @EventListener
     public void handleStudyUpdateEvent(StudyUpdateEvent studyUpdateEvent) {
-        Study study = studyRepository.findStudyWithManagersAndMembersById(studyUpdateEvent.getStudy().getId());
+        Study study = studyRepository.findStudyWithManagersAndMemebersById(studyUpdateEvent.getStudy().getId());
         Set<Account> accounts = new HashSet<>();
         accounts.addAll(study.getManagers());
         accounts.addAll(study.getMembers());
